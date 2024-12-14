@@ -96,15 +96,12 @@ body {
 .tool-frame {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 3 columns */
-  grid-auto-rows: 1fr; /* Ensure proportional rows */
+  grid-auto-rows: minmax(0, 1fr); /* Ensure proportional rows */
   gap: 10px;
   width: 100%; /* Full width of the container */
   aspect-ratio: 3 / 4; /* Maintain 3x4 layout */
 }
-/*
-.tool-frame-2 {
-  
-}*/
+
 /* Tool Elements */
 .tool {
   background-color: white;
@@ -117,24 +114,45 @@ body {
   text-align: center;
 }
 
+.use-tool:hover{
+  background-color: rgb(217, 216, 216);
+  border: 2px solid grey;
+}
+
 /* Footer Styling */
 .footer {
   height: 20px;
   background-color: #f1f1f1;
 }
 
-#canvas-board{
+/* Add Button Styling */
+.canvas-add-button img {
+  cursor: pointer;
+}
+
+/* Option Bar Styling */
+.option-bar {
+  position: absolute; /* Ensures it doesn't affect layout */
   background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  width: 150px;
+  padding: 10px;
+  z-index: 1000;
 }
 
-.canvas-frame{
-  display: grid;
-  place-items: center;
+.option {
+  padding: 8px 12px;
+  cursor: pointer;
+  text-align: center;
 }
 
-.button-add-bar {
-  width: 250px;
-  height: 300px;
-  background-color: black;
-  position: absolute;
+.option:hover {
+  background-color: #f0f0f0;
+}
+
+
+.footer{
+  background-color: #000000;
 }
