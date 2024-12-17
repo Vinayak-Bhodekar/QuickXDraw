@@ -1,3 +1,6 @@
+import { freeHand } from "./tools/Shapes/FreeHand.js";
+import { lineDraw } from "./tools/Shapes/lineDraw.js";
+import { CreateRectangle } from "./tools/Shapes/rectangleDraw.js";
 let upload_buttons = [
   {
     Icon: "./Icons/Tools/pencil.png",
@@ -66,7 +69,7 @@ const optionMenu = document.querySelector(".option-menu");
 
 // Render buttons.
 
-function buttonRender() {
+export function buttonRender() {
   let html = ``;
   let count = upload_buttons.length;
   for (let i = 0; i < 12; i++) {
@@ -87,6 +90,7 @@ function buttonRender() {
   document.querySelector(".tool-frame").innerHTML = html;
   
   handleAddButtonClick();
+  freeHandFunction();
   
 }
 
@@ -174,15 +178,13 @@ function getButtonByName(buttonName){
   return buttons.find((ele) => ele.name === buttonName);
 }
 
+// freehand handling.
 
-function handleShapeButtonClick(){
-  const shapeOptionButton = document.querySelector(".js-shapes");
-  shapeOptionButton.addEventListener('click', () => {
-    let html = '';
-    shapes.forEach((shape) => {
-      html += `<div class="shapes-${shape.name}"><pre>${shape.name}    <img width=15px height = 15px src="${shape.Icon}"></pre></div>`;
-    });
-    document.querySelector(".tool-frame-2").innerHTML = html;
-  });
+function freeHandFunction(){
+  const handleFreeHand = () => {
+    freeHand();
+  }
+  document.querySelector(".js-freeHand").removeEventListener('click',handleFreeHand);
+  document.querySelector(".js-freeHand").addEventListener('click', handleFreeHand);
+  
 }
-handleShapeButtonClick();

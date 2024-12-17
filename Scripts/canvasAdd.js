@@ -1,5 +1,5 @@
 import { inner_adjustement } from "./tool-bar-2.js";
-import { buttonRender,buttons } from "./buttonsRendering.js";
+import { buttonRender } from "./buttonsRendering.js";
 
 const addButton = document.querySelector(".canvas-add-button");
 addButton.addEventListener('click',(event) => {

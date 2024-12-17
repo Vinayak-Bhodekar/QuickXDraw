@@ -1,5 +1,4 @@
 export function inner_adjustement(tool_name){
-  console.log("hello");
   const tool_box = document.querySelector(".tool-frame-2");
   if (tool_name === "canvas-adjustement"){
     tool_box.innerHTML = `
@@ -7,5 +6,8 @@ export function inner_adjustement(tool_name){
       <div>bridth = <input type = "text" placeholder = "0 - 1134" class="width"></div>
       <div class="create-button">Create</div>
     `;
+  }
+  else{
+    tool_box.innerHTML = "";
   }
 }

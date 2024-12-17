@@ -156,3 +156,12 @@ body {
 .footer{
   background-color: #000000;
 }
+
+#canvas-board {
+  background-color:#ccc;
+}
+
+.shape:hover{
+  background-color: #ccc;
+  border: 1px solid black;
+}
