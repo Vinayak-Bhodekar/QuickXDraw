@@ -1,10 +1,9 @@
 export function CreateRectangle(){
-  document.querySelector(".js-shape-selector").removeEventListener('click',() => {});
-
+  console.log("rectangle has been called.");
   const canvas = document.getElementById("canvas-board");
   const ctx = canvas.getContext('2d');
 
-  const tempCanvas = document.createElement("canvas");
+  const tempCanvas = document.createElement('canvas');
   tempCanvas.width = canvas.width;
   tempCanvas.height = canvas.height;
   const tempCtx = tempCanvas.getContext('2d');
@@ -19,49 +18,74 @@ export function CreateRectangle(){
     return {
       x: (event.clientX-rect.left),
       y: (event.clientY-rect.top)
-    }
+    };
   }
 
-  canvas.addEventListener('mousedown', (event) => {
+  function handleMouseDown(event){
+    const pos = getMousePosition(event);
     isDrawing = true;
-
-    const {x,y} = getMousePosition(event);
-    startX = x;
-    startY = y;
+    startX = pos.x;
+    startY = pos.y;
 
     tempCtx.clearRect(0,0,tempCanvas.width,tempCanvas.height);
     tempCtx.drawImage(canvas,0,0);
+  }
 
-  });
+  function handleMouseMove(event){
+    if(!isDrawing) return 
+    const pos = getMousePosition(event);
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(tempCanvas, 0, 0);
+    
+    width = pos.x - startX;
+    height = pos.y - startY;
 
-  canvas.addEventListener('mousemove', (event) => {
-    if(!isDrawing) return;
-
-    const {x,y} = getMousePosition(event);
-    ctx.clearRect(0,0,tempCanvas.width, tempCanvas.height);
-    ctx.drawImage(tempCanvas,0,0);
-    width = Math.sqrt(((x-startX)**2) + ((startY-startY)**2));
-    height = Math.sqrt(((x-x)**2) + ((y-startY)**2));
     ctx.beginPath();
-    ctx.rect(startX,startY,width,height);
-    ctx.lineWidth = 2;
+    ctx.rect(startX, startY, width, height);
+    ctx.strokeStyle = '#000';  
+    ctx.lineWidth = 2;     
     ctx.stroke();
     ctx.closePath();
-  });
+  }
 
-  canvas.addEventListener('mouseup', (event) => {
-    if(!isDrawing) return;
-    isDrawing = false;
-    const {x,y} = getMousePosition(event);
-
-    ctx.drawImage(tempCanvas,0,0);
+  function handleMouseUp(event){
+    if (!isDrawing) return;
+    
+    const pos = getMousePosition(event);
+    width = pos.x - startX;
+    height = pos.y - startY;
+    
     ctx.beginPath();
-    ctx.rect(startX,startY,width,height);
+    ctx.rect(startX, startY, width, height);
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 2;        
     ctx.stroke();
     ctx.closePath();
-  });
 
-  canvas.addEventListener('mouseleave', (event) => {
+    tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
+    tempCtx.drawImage(canvas, 0, 0);
+
     isDrawing = false;
-  });
+  }
+
+  function handleMouseLeave(){
+    if (!isDrawing) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(tempCanvas, 0, 0);
+    
+    isDrawing = false;
+  }
+
+  canvas.addEventListener('mousedown', handleMouseDown);
+  canvas.addEventListener('mousemove', handleMouseMove);
+  canvas.addEventListener('mouseup', handleMouseUp);
+  canvas.addEventListener('mouseleave', handleMouseLeave);
+
+  return {
+    mousedown:handleMouseDown,
+    mousemove:handleMouseMove,
+    mouseup:handleMouseUp,
+    mouseleave:handleMouseLeave
+  };
 }
