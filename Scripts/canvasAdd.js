@@ -10,7 +10,6 @@ addButton.addEventListener('click',(event) => {
     const height = Number(document.querySelector(".height").value);
     const width = Number(document.querySelector(".width").value);
     document.querySelector(".canvas-frame").innerHTML = `<canvas height=${height === 0 ? 594 : height} width=${width === 0 ? 1134:width} id = "canvas-board"></canvas>`;
-    console.log(height,width,document.querySelector(".canvas-frame"));
     buttonRender();
   });
 });

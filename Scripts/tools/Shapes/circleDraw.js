@@ -1,64 +1,104 @@
-const canvas = document.getElementById("canvas-board");
-const ctx = canvas.getContext('2d');
+export function circleDraw() {
+  const canvas = document.getElementById("canvas-board");
+  const ctx = canvas.getContext('2d');
+  
+  // Create temporary canvas for preview
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = canvas.width;
+  tempCanvas.height = canvas.height;
+  const tempCtx = tempCanvas.getContext('2d');
 
-const tempCanvas = document.createElement("canvas");
-tempCanvas.width = canvas.width;
-tempCanvas.height = canvas.height;
-const tempCtx = tempCanvas.getContext('2d');
+  let isDrawing = false;
+  let startX = 0, startY = 0;
 
-let isDrawing = false;
-let centerX = 0, centerY = 0;
-let radius = 0;
-
-function getMousePosition (event){
-  const rect = canvas.getBoundingClientRect();
-  return {
-    x: (event.clientX-rect.left),
-    y: (event.clientY-rect.top)
+  function getMousePosition(event) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: (event.clientX - rect.left),
+      y: (event.clientY - rect.top)
+    };
   }
+
+  function calculateRadius(x1, y1, x2, y2) {
+    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+  }
+
+  function handleMouseDown(event) {
+    const pos = getMousePosition(event);
+    isDrawing = true;
+    startX = pos.x;
+    startY = pos.y;
+
+    // Save current canvas state
+    tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
+    tempCtx.drawImage(canvas, 0, 0);
+  }
+
+  function handleMouseMove(event) {
+    if (!isDrawing) return;
+    
+    const pos = getMousePosition(event);
+    
+    // Clear the main canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Restore the previous state
+    ctx.drawImage(tempCanvas, 0, 0);
+    
+    // Calculate radius
+    const radius = calculateRadius(startX, startY, pos.x, pos.y);
+
+    // Draw the preview circle
+    ctx.beginPath();
+    ctx.arc(startX, startY, radius, 0, Math.PI * 2);
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  function handleMouseUp(event) {
+    if (!isDrawing) return;
+    
+    const pos = getMousePosition(event);
+    
+    // Calculate final radius
+    const radius = calculateRadius(startX, startY, pos.x, pos.y);
+    
+    // Draw the final circle
+    ctx.beginPath();
+    ctx.arc(startX, startY, radius, 0, Math.PI * 2);
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Save current state to temp canvas
+    tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
+    tempCtx.drawImage(canvas, 0, 0);
+
+    isDrawing = false;
+  }
+
+  function handleMouseLeave() {
+    if (!isDrawing) return;
+    
+    // Restore the previous state if mouse leaves canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(tempCanvas, 0, 0);
+    
+    isDrawing = false;
+  }
+
+  // Add event listeners
+  canvas.addEventListener('mousedown', handleMouseDown);
+  canvas.addEventListener('mousemove', handleMouseMove);
+  canvas.addEventListener('mouseup', handleMouseUp);
+  canvas.addEventListener('mouseleave', handleMouseLeave);
+
+  // Return the event handlers
+  return {
+    mousedown: handleMouseDown,
+    mousemove: handleMouseMove,
+    mouseup: handleMouseUp,
+    mouseleave: handleMouseLeave
+  };
 }
-
-canvas.addEventListener('mousedown', (event) => {
-  isDrawing = true;
-
-  const {x,y} = getMousePosition(event);
-  centerX = x;
-  centerY = y;
-
-  tempCtx.clearRect(0,0,tempCanvas.width,tempCanvas.height);
-  tempCtx.drawImage(canvas,0,0);
-
-});
-
-canvas.addEventListener('mousemove', (event) => {
-  if(!isDrawing) return;
-
-  const {x,y} = getMousePosition(event);
-  ctx.clearRect(0,0,tempCanvas.width, tempCanvas.height);
-  ctx.drawImage(tempCanvas,0,0);
-
-  radius = Math.sqrt(((centerX - x)**2) + ((centerY - y)**2));
-
-  ctx.beginPath();
-  ctx.arc(centerX,centerY,radius,0,2*Math.PI);
-  ctx.strokeStyle = "white";
-  ctx.lineWidth = 2;
-  ctx.stroke();
-  ctx.closePath();
-});
-
-canvas.addEventListener('mouseup', (event) => {
-  if(!isDrawing) return;
-  isDrawing = false;
-  const {x,y} = getMousePosition(event);
-
-  ctx.drawImage(tempCanvas,0,0);
-  ctx.beginPath();
-  ctx.arc(centerX,centerY,radius,0,2*Math.PI);
-  ctx.stroke();
-  ctx.closePath();
-});
-
-canvas.addEventListener('mouseleave', (event) => {
-  isDrawing = false;
-});

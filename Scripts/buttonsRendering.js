@@ -1,8 +1,10 @@
 import { freeHand } from "./tools/Shapes/FreeHand.js";
 import { lineDraw } from "./tools/Shapes/lineDraw.js";
 import { CreateRectangle } from "./tools/Shapes/rectangleDraw.js";
-
+import { freeHandClick } from "./tools/Shapes/FreeHand.js";
 import { initializeToolbar, shapeSelector } from "./ShapeSelector.js";
+import { paintButtonClick,paintDraw } from "./tools/paint.js";
+
 let upload_buttons = [
   {
     Icon: "./Icons/Tools/pencil.png",
@@ -93,10 +95,15 @@ export function buttonRender() {
   }
   document.querySelector(".tool-frame").innerHTML = html;
   
-  handleAddButtonClick();
-  shapeButtonClick();
-  initializeToolbar();
-  
+  handleAddButtonClick();    // add button handling
+
+  shapeButtonClick(); // shape button handling
+
+  freeHandFunction(); // free hand handling.
+
+  freeHandClick();
+
+  paintButtonClick();
 }
 
 buttonRender();
@@ -156,6 +163,7 @@ function attachEventListeners(){
       console.log(buttons,getButtonIndex(buttonName),upload_buttons);
       buttonRender();
       optionMenu.style.display = "none";
+
     });
   });
 
@@ -207,3 +215,4 @@ function shapeButtonClick(){
     shapeSelector();
   });
 }
+

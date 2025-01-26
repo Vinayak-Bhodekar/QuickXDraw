@@ -32,7 +32,7 @@ export function CreateRectangle(){
   }
 
   function handleMouseMove(event){
-    if(!isDrawing) return 
+    if(!isDrawing) return;
     const pos = getMousePosition(event);
     
     ctx.clearRect(0, 0, canvas.width, canvas.height);

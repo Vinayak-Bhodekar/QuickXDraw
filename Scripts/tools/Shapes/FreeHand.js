@@ -85,3 +85,13 @@ export function freeHand() {
     mouseleave: handleMouseLeave
   };
 }
+
+export function freeHandClick(){
+  document.querySelector(".js-freeHand").addEventListener('click', () => {
+    let html = "";
+    html = `<div>
+              <input type="range" min="0" max="100" value="50" class="slider" id="mySlider">
+          </div>`;
+    document.querySelector(".tool-frame-2").innerHTML = html;
+  });
+}

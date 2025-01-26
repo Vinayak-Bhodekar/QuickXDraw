@@ -1,6 +1,13 @@
 import { freeHand } from "./tools/Shapes/FreeHand.js";
 import { lineDraw } from "./tools/Shapes/lineDraw.js";
 import { CreateRectangle } from "./tools/Shapes/rectangleDraw.js";
+import { circleDraw } from "./tools/Shapes/circleDraw.js"
+import { triangleDraw } from "./tools/Shapes/tringleDraw.js";
+import { squareDraw } from "./tools/Shapes/square.js";
+import { rightArrowDraw} from "./tools/Shapes/rightArrow.js";
+import { leftArrowDraw } from "./tools/Shapes/leftArrow.js";
+import { downArrowDraw } from "./tools/Shapes/downArrow.js";
+import { upArrowDraw} from "./tools/Shapes/upArrow.js";
 
 let currentShape = null;
 let currentShapeName = null;
@@ -77,8 +84,26 @@ function activateShape(shapeName){
     case 'rectangle':
       currentShape = CreateRectangle();
       break;
-    case 'freeHand':
-      currentShape = freeHand();
+    case 'circle':
+      currentShape = circleDraw();
+      break;
+    case 'triangle':
+      currentShape = triangleDraw();
+      break;
+    case 'square':
+      currentShape = squareDraw();
+      break;
+    case 'right-Arrow':
+      currentShape = rightArrowDraw();
+      break;
+    case 'left-Arrow':
+      currentShape = leftArrowDraw();
+      break;
+    case 'down-Arrow':
+      currentShape = downArrowDraw();
+      break;
+    case 'up-Arrow':
+      currentShape = upArrowDraw();
       break;
     default:
       console.log('Shape not implemented');
