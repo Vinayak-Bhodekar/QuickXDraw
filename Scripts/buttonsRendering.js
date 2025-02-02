@@ -1,9 +1,10 @@
 import { freeHand } from "./tools/Shapes/FreeHand.js";
-import { lineDraw } from "./tools/Shapes/lineDraw.js";
-import { CreateRectangle } from "./tools/Shapes/rectangleDraw.js";
 import { freeHandClick } from "./tools/Shapes/FreeHand.js";
-import { initializeToolbar, shapeSelector } from "./ShapeSelector.js";
-import { paintButtonClick,paintDraw } from "./tools/paint.js";
+import { shapeSelector } from "./ShapeSelector.js";
+import { paintButtonClick } from "./tools/paint.js";
+import { toolState } from "./tools/managingTools.js";
+import { colorSelector } from "./ShapeSelector.js";
+import { addText,setupInputText } from "./tools/addText.js";
 
 let upload_buttons = [
   {
@@ -69,6 +70,22 @@ const shapes = [
   },
 ]
 
+const storedButtons = localStorage.getItem('upload_buttons');
+if(storedButtons){
+  upload_buttons = JSON.parse(storedButtons);
+}
+else {
+  localStorage.setItem('upload_buttons',JSON.stringify(upload_buttons));
+}
+
+const storedbuttons2 = localStorage.getItem('buttons');
+if(storedbuttons2){
+  buttons = JSON.parse(storedbuttons2);
+}
+else{
+  localStorage.setItem('buttons',JSON.stringify(buttons));
+}
+
 const optionMenu = document.querySelector(".option-menu");
 
 // Render buttons.
@@ -104,6 +121,8 @@ export function buttonRender() {
   freeHandClick();
 
   paintButtonClick();
+
+  addTextHandling();
 }
 
 buttonRender();
@@ -160,6 +179,7 @@ function attachEventListeners(){
       const buttonName = button.dataset.name;
       addButtonInArray(buttonName);
       deleteButtonFromArray(buttonName);
+
       console.log(buttons,getButtonIndex(buttonName),upload_buttons);
       buttonRender();
       optionMenu.style.display = "none";
@@ -169,24 +189,27 @@ function attachEventListeners(){
 
 }
 
+// inner functions
+
 function deleteButtonFromArray(Name){
   const index = getButtonIndex(Name);
   if(index !== -1){
     buttons.splice(index,1);
+    localStorage.setItem('upload_buttons',JSON.stringify(upload_buttons));
+    localStorage.setItem('buttons',JSON.stringify(buttons));
   }
 }
-
 function addButtonInArray(Name){
   const Element = getButtonByName(Name);
   if(Element){
     upload_buttons.splice(upload_buttons.length-1,0,Element);
+    localStorage.setItem('upload_buttons',JSON.stringify(upload_buttons));
+    localStorage.setItem('buttons',JSON.stringify(buttons));
   }
 }
-
 function getButtonIndex(buttonName){
   return buttons.findIndex((ele) => ele.name === buttonName);
 }
-
 function getButtonByName(buttonName){
   return buttons.find((ele) => ele.name === buttonName);
 }
@@ -201,18 +224,53 @@ function freeHandFunction(){
   document.querySelector(".js-freeHand").addEventListener('click', handleFreeHand);
   
 }
-
-function shapeButtonClick(){
+// shapes button handling
+function shapeButtonClick() {
   document.querySelector(".js-shapes").addEventListener('click', () => {
-    console.log("hi i clicked");
-    let html = '';
+    // Set the current tool to shape
+    toolState.setCurrentTool('shape');
+
+    let shapesHtml = '';
     shapes.forEach(shape => {
-      html += `<div class = "js-shape-selector shape" data-shape-name = "${shape.name}">
+      shapesHtml += `<div class="js-shape-selector shape" data-shape-name="${shape.name}">
         ${shape.name}-<img width="15" height="15" src="${shape.Icon}">
-      </div>`
-    })
+      </div>`;
+    });
+
+    const html = `
+      <div class="shapes-container">
+        <div class="shapes-column">
+          ${shapesHtml}
+        </div>
+        <div class="shape-modifiers">
+          <div class="color-column">
+            <input type="color" id="shapeColor">
+            <label for="shapeColor">Shape Color</label>
+          </div>
+          <div class="thickness-column">
+            <input type="range" id="shapeThickness" min="1" max="10" value="5">
+            <label for="shapeThickness">Set Thickness</label>
+          </div>
+        </div>
+      </div>
+    `;
+
     document.querySelector(".tool-frame-2").innerHTML = html;
+    colorSelector();
     shapeSelector();
   });
 }
 
+// add text button handling
+
+function addTextHandling() {
+  const  textButton = document.querySelector(".js-text");
+  if (textButton){
+    textButton.addEventListener('click', () => {
+      console.log("text button has been clicked");
+      setupInputText();
+      addText();
+    });
+  } 
+  
+}

@@ -1,3 +1,6 @@
+import { colorSelector, getCurrentColor, strokeSelector, getCurrentStroke } from "../../ShapeSelector.js";
+
+
 export function squareDraw() {
   const canvas = document.getElementById('canvas-board');
   const ctx = canvas.getContext('2d');
@@ -10,6 +13,9 @@ export function squareDraw() {
   let isDrawing = false;
   let startX = 0, startY = 0;
   let width = 0;
+
+  colorSelector();
+  strokeSelector();
 
   function getMousePosition(event){
     const rect = canvas.getBoundingClientRect();
@@ -53,7 +59,8 @@ export function squareDraw() {
   function DrawSquare(width,ctx){
     ctx.beginPath();
     ctx.rect(startX,startY,width,width);
-    ctx.strokeStyle = 'black';
+    ctx.strokeStyle = getCurrentColor();
+    ctx.lineWidth = getCurrentStroke();
     ctx.stroke();
     ctx.closepath;
   }

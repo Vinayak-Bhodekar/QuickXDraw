@@ -1,3 +1,6 @@
+import { colorSelector, getCurrentColor ,strokeSelector, getCurrentStroke} from "../../ShapeSelector.js";
+
+
 export function downArrowDraw() {
   const canvas = document.getElementById('canvas-board');
   const ctx = canvas.getContext('2d');
@@ -10,6 +13,8 @@ export function downArrowDraw() {
   let isDrawing = false;
   let startX = 0, startY = 0;
   let width = 0, height = 0;
+
+  strokeSelector();
 
   function getMousePosition(event) {
     const rect = canvas.getBoundingClientRect();
@@ -24,7 +29,6 @@ export function downArrowDraw() {
     const {x,y} = getMousePosition(event);
     startX = x;
     startY = y;
-    // Save current canvas state
     tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
     tempCtx.drawImage(canvas, 0, 0);
   }
@@ -47,7 +51,7 @@ export function downArrowDraw() {
     isDrawing = false;
     const {x,y} = getMousePosition(event);
     
-    // Draw final shape
+    
     width = x - startX;
     height = y - startY;
     DrawDownArrow(x, y, height, width);
@@ -58,20 +62,22 @@ export function downArrowDraw() {
   }
 
   function DrawDownArrow(x, y, height, width) {
-    // Draw the arrow line
+    
     ctx.beginPath();
     ctx.moveTo(startX + (width/2), startY);
     ctx.lineTo(startX + (width/2), y);
-    ctx.strokeStyle = 'black';
+    ctx.strokeStyle = getCurrentColor();
+    ctx.lineWidth = getCurrentStroke();
     ctx.stroke();
     ctx.closePath();
 
-    // Draw the arrow head
+    
     ctx.beginPath();
     ctx.moveTo(startX, y - (height/4));
     ctx.lineTo(startX + (width/2), y);
     ctx.lineTo(x, y - (height/4));
-    ctx.strokeStyle = 'black';
+    ctx.strokeStyle = getCurrentColor();
+    ctx.lineWidth = getCurrentStroke();
     ctx.stroke();
     ctx.closePath();
   }

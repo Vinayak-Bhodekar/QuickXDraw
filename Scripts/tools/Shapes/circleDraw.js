@@ -1,8 +1,10 @@
+import { colorSelector, getCurrentColor, strokeSelector, getCurrentStroke} from "../../ShapeSelector.js";
+
 export function circleDraw() {
   const canvas = document.getElementById("canvas-board");
   const ctx = canvas.getContext('2d');
   
-  // Create temporary canvas for preview
+  // Create temporary canvas 
   const tempCanvas = document.createElement('canvas');
   tempCanvas.width = canvas.width;
   tempCanvas.height = canvas.height;
@@ -10,6 +12,10 @@ export function circleDraw() {
 
   let isDrawing = false;
   let startX = 0, startY = 0;
+
+  // extra input
+  colorSelector(); 
+  strokeSelector();
 
   function getMousePosition(event) {
     const rect = canvas.getBoundingClientRect();
@@ -29,7 +35,6 @@ export function circleDraw() {
     startX = pos.x;
     startY = pos.y;
 
-    // Save current canvas state
     tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
     tempCtx.drawImage(canvas, 0, 0);
   }
@@ -39,20 +44,17 @@ export function circleDraw() {
     
     const pos = getMousePosition(event);
     
-    // Clear the main canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Restore the previous state
     ctx.drawImage(tempCanvas, 0, 0);
     
-    // Calculate radius
+    // radius
     const radius = calculateRadius(startX, startY, pos.x, pos.y);
 
-    // Draw the preview circle
+  
     ctx.beginPath();
     ctx.arc(startX, startY, radius, 0, Math.PI * 2);
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = getCurrentColor(); 
+    ctx.lineWidth = getCurrentStroke(); 
     ctx.stroke();
   }
 
@@ -61,17 +63,14 @@ export function circleDraw() {
     
     const pos = getMousePosition(event);
     
-    // Calculate final radius
     const radius = calculateRadius(startX, startY, pos.x, pos.y);
     
-    // Draw the final circle
     ctx.beginPath();
     ctx.arc(startX, startY, radius, 0, Math.PI * 2);
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = getCurrentColor(); 
+    ctx.lineWidth = getCurrentStroke();
     ctx.stroke();
 
-    // Save current state to temp canvas
     tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
     tempCtx.drawImage(canvas, 0, 0);
 
@@ -81,20 +80,17 @@ export function circleDraw() {
   function handleMouseLeave() {
     if (!isDrawing) return;
     
-    // Restore the previous state if mouse leaves canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(tempCanvas, 0, 0);
     
     isDrawing = false;
   }
 
-  // Add event listeners
   canvas.addEventListener('mousedown', handleMouseDown);
   canvas.addEventListener('mousemove', handleMouseMove);
   canvas.addEventListener('mouseup', handleMouseUp);
   canvas.addEventListener('mouseleave', handleMouseLeave);
 
-  // Return the event handlers
   return {
     mousedown: handleMouseDown,
     mousemove: handleMouseMove,

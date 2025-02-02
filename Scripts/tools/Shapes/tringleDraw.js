@@ -1,3 +1,6 @@
+import { colorSelector, getCurrentColor, strokeSelector, getCurrentStroke } from "../../ShapeSelector.js";
+
+
 export function triangleDraw() {
   const canvas = document.getElementById('canvas-board');
   const ctx = canvas.getContext('2d');
@@ -10,6 +13,9 @@ export function triangleDraw() {
   let isDrawing = false;
   let startX = 0, startY = 0;
   let width = 0, height = 0;
+
+  colorSelector();
+  strokeSelector();
   
   function getMousePosition(event) {
     const rect = canvas.getBoundingClientRect();
@@ -63,7 +69,8 @@ export function triangleDraw() {
     ctx.lineTo(x,y);
     ctx.lineTo(x1,y);
     ctx.lineTo(startX,startY);
-    ctx.strokeStyle = 'black';
+    ctx.strokeStyle = getCurrentColor();
+    ctx.lineWidth = getCurrentStroke();
     ctx.stroke();
     ctx.closePath(); 
   }

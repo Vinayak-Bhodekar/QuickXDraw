@@ -1,3 +1,6 @@
+import { colorSelector, getCurrentColor, strokeSelector, getCurrentStroke} from "../../ShapeSelector.js";
+
+
 export function lineDraw() {
   const canvas = document.getElementById("canvas-board");
   const ctx = canvas.getContext('2d');
@@ -9,6 +12,8 @@ export function lineDraw() {
 
   let isDrawing = false;
   let startX = 0, startY = 0;
+
+  strokeSelector();
 
   function getMousePosition(event) {
     const rect = canvas.getBoundingClientRect();
@@ -40,8 +45,8 @@ export function lineDraw() {
     ctx.beginPath();
     ctx.moveTo(startX, startY);
     ctx.lineTo(pos.x, pos.y);
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = getCurrentColor();
+    ctx.lineWidth = getCurrentStroke();
     ctx.stroke();
   }
 
@@ -53,8 +58,8 @@ export function lineDraw() {
     ctx.beginPath();
     ctx.moveTo(startX, startY);
     ctx.lineTo(pos.x, pos.y);
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = getCurrentColor();
+    ctx.lineWidth = getCurrentStroke();
     ctx.stroke();
 
     tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);

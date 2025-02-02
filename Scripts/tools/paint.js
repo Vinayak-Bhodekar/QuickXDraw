@@ -1,4 +1,9 @@
+import { canvasStorage } from "../canvasStorage.js";
+import { toolState } from "./managingTools.js";
+
 export function paintDraw(paintColor) {
+
+
   const canvas = document.getElementById('canvas-board');
   const ctx = canvas.getContext('2d');
 
@@ -68,13 +73,13 @@ export function paintDraw(paintColor) {
   }
 
   function handleMouseDown(event) {
+    if(toolState.currentTool !== 'paint') return;
     const { x, y } = getMousePosition(event);
     floodfill(x, y, paintColor);
   }
 
   // Remove any previous listeners to avoid duplication
-  canvas.removeEventListener('mousedown', handleMouseDown);
-  canvas.addEventListener('mousedown', handleMouseDown);
+  toolState.setCurrentTool('paint',handleMouseDown);
 }
 
 export function paintButtonClick() {
@@ -98,6 +103,7 @@ export function paintButtonClick() {
 
           // Initialize the paint functionality with the selected color
           paintDraw(colorValue);
+          canvasStorage.save();
         });
       }
     });

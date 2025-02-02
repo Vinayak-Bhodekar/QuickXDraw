@@ -1,5 +1,7 @@
+import { colorSelector, getCurrentColor, strokeSelector, getCurrentStroke } from "../../ShapeSelector.js";
+
+
 export function CreateRectangle(){
-  console.log("rectangle has been called.");
   const canvas = document.getElementById("canvas-board");
   const ctx = canvas.getContext('2d');
 
@@ -11,6 +13,9 @@ export function CreateRectangle(){
   let isDrawing = false;
   let startX = 0, startY = 0;
   let width =0, height = 0;
+
+  colorSelector();
+  strokeSelector()
 
 
   function getMousePosition (event){
@@ -43,8 +48,8 @@ export function CreateRectangle(){
 
     ctx.beginPath();
     ctx.rect(startX, startY, width, height);
-    ctx.strokeStyle = '#000';  
-    ctx.lineWidth = 2;     
+    ctx.strokeStyle = getCurrentColor();  
+    ctx.lineWidth = getCurrentStroke();     
     ctx.stroke();
     ctx.closePath();
   }
@@ -58,8 +63,8 @@ export function CreateRectangle(){
     
     ctx.beginPath();
     ctx.rect(startX, startY, width, height);
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 2;        
+    ctx.strokeStyle = getCurrentColor();
+    ctx.lineWidth = getCurrentStroke();        
     ctx.stroke();
     ctx.closePath();
 

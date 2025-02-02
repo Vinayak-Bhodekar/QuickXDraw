@@ -1,0 +1,27 @@
+.menu-frame {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 10px;
+}
+
+/* Create a container for each icon */
+.menu-icons {
+  width: 30px;  /* Set to maximum size (hover size) */
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu-frame img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease; /* Smooth transition for hover effect */
+}
+
+.menu-icons:hover img {
+  width: 30px;
+  height: 30px;
+}

@@ -165,3 +165,76 @@ body {
   background-color: #ccc;
   border: 1px solid black;
 }
+
+/* Shapes layout */
+.shapes-container {
+  display: flex; /* Create a horizontal layout */
+  gap: 10px; /* Space between shapes and modifiers */
+  width: 100%;
+  padding: 5px; /* Padding around the container */
+}
+
+.shapes-column {
+  flex: 2; /* Take more space for shapes */
+  display: flex;
+  flex-direction: column; /* Stack shapes vertically */
+  gap: 5px; /* Space between shapes */
+}
+
+.shape-modifiers {
+  flex: 1; /* Take less space for modifiers */
+  display: flex; /* Create a vertical layout */
+  flex-direction: column; /* Stack color and thickness columns vertically */
+  gap: 10px; /* Space between the columns */
+  padding: 5px; /* Padding around the modifiers */
+}
+
+.color-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px; /* Space between color input and label */
+}
+
+.thickness-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center align items */
+  gap: 5px; /* Space between the input and label */
+}
+
+/* Additional styles for the range input and labels */
+.thickness-column input[type="range"] {
+  -webkit-appearance: none; /* Remove default styling */
+  width: 100%; /* Full width */
+  height: 5px; /* Height of the slider */
+  background: #ddd; /* Background color of the slider */
+  border-radius: 5px; /* Rounded edges */
+  outline: none; /* Remove outline */
+}
+
+.thickness-column input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Remove default styling */
+  appearance: none; /* Remove default styling */
+  width: 15px; /* Width of the thumb */
+  height: 15px; /* Height of the thumb */
+  border-radius: 50%; /* Make it circular */
+  background: #007bff; /* Color of the thumb */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+.thickness-column input[type="range"]::-moz-range-thumb {
+  width: 15px; /* Width of the thumb */
+  height: 15px; /* Height of the thumb */
+  border-radius: 50%; /* Make it circular */
+  background: #007bff; /* Color of the thumb */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+.color-column label,
+.thickness-column label {
+  font-size: 12px; /* Font size for the label */
+  color: #333; /* Color for the label */
+}
+
+

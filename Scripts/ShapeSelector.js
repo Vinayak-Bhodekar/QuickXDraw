@@ -1,4 +1,3 @@
-import { freeHand } from "./tools/Shapes/FreeHand.js";
 import { lineDraw } from "./tools/Shapes/lineDraw.js";
 import { CreateRectangle } from "./tools/Shapes/rectangleDraw.js";
 import { circleDraw } from "./tools/Shapes/circleDraw.js"
@@ -8,9 +7,14 @@ import { rightArrowDraw} from "./tools/Shapes/rightArrow.js";
 import { leftArrowDraw } from "./tools/Shapes/leftArrow.js";
 import { downArrowDraw } from "./tools/Shapes/downArrow.js";
 import { upArrowDraw} from "./tools/Shapes/upArrow.js";
+import { toolState } from "./tools/managingTools.js";
 
 let currentShape = null;
 let currentShapeName = null;
+let color = '#000000'; // Default color
+let stroke = 2;
+
+// remove the current shape
 
 function removeCurrentShape(){
   if(currentShape){
@@ -24,6 +28,8 @@ function removeCurrentShape(){
     currentShapeName = null;
   }
 }
+
+
 
 function removeActiveClass() {
   document.querySelectorAll('.js-shape-selector, .use-tool').forEach(button => {
@@ -61,10 +67,14 @@ export function initializeToolbar() {
 
 function handleShapeSelection(shapeName, button) {
   console.log("Selecting shape:", shapeName);
-  
+
+  // Allow switching to shape tool
+  if (toolState.currentTool !== 'shape' && toolState.currentTool !== 'freehand') {
+    console.log("Switching to shape tool.");
+    toolState.setCurrentTool('shape'); // Set the current tool to shape
+  }
+
   if (shapeName === currentShapeName) {
-    removeCurrentShape();
-    removeActiveClass();
     return;
   }
 
@@ -73,6 +83,27 @@ function handleShapeSelection(shapeName, button) {
   button.classList.add('active');
   activateShape(shapeName);
   currentShapeName = shapeName;
+}
+
+export function colorSelector() {
+  const colorInput = document.getElementById("shapeColor");
+  if (colorInput) {
+    colorInput.addEventListener('input', (event) => {
+      color = event.target.value; // Update the global color variable
+      console.log(color);
+    });
+  } else {
+    console.error("Color input not found!");
+  }
+}
+
+export function strokeSelector() {
+  const strokeInput = document.getElementById("shapeThickness");
+  if (strokeInput) {
+    strokeInput.addEventListener('input', (event) => {
+      stroke = event.target.value;
+    });
+  }
 }
 
 function activateShape(shapeName){
@@ -85,7 +116,7 @@ function activateShape(shapeName){
       currentShape = CreateRectangle();
       break;
     case 'circle':
-      currentShape = circleDraw();
+      currentShape = circleDraw(color);
       break;
     case 'triangle':
       currentShape = triangleDraw();
@@ -122,4 +153,12 @@ export function getCurrentShape() {
 export function clearCurrentShape(){
   removeCurrentShape();
   removeActiveClass();
+}
+
+export function getCurrentColor() {
+  return color; // Function to get the current color
+}
+
+export function getCurrentStroke() {
+  return stroke;
 }

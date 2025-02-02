@@ -1,3 +1,5 @@
+import { colorSelector, getCurrentColor, strokeSelector, getCurrentStroke } from "../../ShapeSelector.js";
+
 
 export function rightArrowDraw(){
 
@@ -13,12 +15,16 @@ export function rightArrowDraw(){
   let startX = 0, startY = 0;
   let width =0, height = 0;
 
+  colorSelector();
+  strokeSelector();
+
   function DrawRightArrow(x,y,height,width){
     // Draw the arrow line
     ctx.beginPath();
     ctx.moveTo(startX, startY + (height/2));
     ctx.lineTo(x, startY + (height/2));
-    ctx.strokeStyle = 'black';
+    ctx.strokeStyle = getCurrentColor();
+    ctx.lineWidth = getCurrentStroke();
     ctx.stroke();
     ctx.closePath();
 
@@ -27,7 +33,8 @@ export function rightArrowDraw(){
     ctx.moveTo((width/2) + (width/8) + startX, startY);
     ctx.lineTo(x, startY + (height/2));
     ctx.lineTo((width/2) + (width/8) + startX, y);
-    ctx.strokeStyle = 'black';
+    ctx.strokeStyle = getCurrentColor();
+    ctx.lineWidth = getCurrentStroke();
     ctx.stroke();
     ctx.closePath();
   } 

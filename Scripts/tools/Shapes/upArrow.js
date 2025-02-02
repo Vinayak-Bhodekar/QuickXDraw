@@ -1,3 +1,6 @@
+import { colorSelector, getCurrentColor, strokeSelector, getCurrentStroke } from "../../ShapeSelector.js";
+
+
 export function upArrowDraw() {
   const canvas = document.getElementById('canvas-board');
   const ctx = canvas.getContext('2d');
@@ -10,6 +13,9 @@ export function upArrowDraw() {
   let isDrawing = false;
   let startX = 0, startY = 0;
   let width = 0, height = 0;
+
+  colorSelector();
+  strokeSelector();
 
   function getMousePosition(event) {
     const rect = canvas.getBoundingClientRect();
@@ -62,7 +68,8 @@ export function upArrowDraw() {
     ctx.beginPath();
     ctx.moveTo(startX + (width/2), startY);
     ctx.lineTo(startX + (width/2), y);
-    ctx.strokeStyle = 'black';
+    ctx.strokeStyle = getCurrentColor();
+    ctx.lineWidth = getCurrentStroke();
     ctx.stroke();
     ctx.closePath();
 
@@ -71,7 +78,8 @@ export function upArrowDraw() {
     ctx.moveTo(startX, y + (height/4));
     ctx.lineTo(startX + (width/2), y);
     ctx.lineTo(x, y + (height/4));
-    ctx.strokeStyle = 'black';
+    ctx.strokeStyle = getCurrentColor();
+    ctx.lineWidth = getCurrentStroke();
     ctx.stroke();
     ctx.closePath();
   }

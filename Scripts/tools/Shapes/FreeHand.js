@@ -1,3 +1,8 @@
+import { colorSelector, getCurrentColor } from "../../ShapeSelector.js";
+
+
+let lineWidth;
+
 export function freeHand() {
   const canvas = document.getElementById('canvas-board');
   const ctx = canvas.getContext('2d');
@@ -11,6 +16,7 @@ export function freeHand() {
   let isDrawing = false;
   let startX = 0;
   let startY = 0;
+
   
   function getMousePosition(event) {
     const rect = canvas.getBoundingClientRect();
@@ -41,8 +47,8 @@ export function freeHand() {
     const { x, y } = getMousePosition(event);
   
     ctx.lineTo(x, y);
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = getCurrentColor();
+    ctx.lineWidth = lineWidth||1;
     ctx.stroke();
     
     startX = x;
@@ -91,7 +97,16 @@ export function freeHandClick(){
     let html = "";
     html = `<div>
               <input type="range" min="0" max="100" value="50" class="slider" id="mySlider">
+              <button class="js-mySlider">set Thickness</button><br>
+              <input type="color" value="#000000" id="shapeColor">
           </div>`;
     document.querySelector(".tool-frame-2").innerHTML = html;
+
+    colorSelector();
+
+    document.getElementById("mySlider").addEventListener('input',(event) => {
+      lineWidth =  event.target.value;
+    });
   });
+  
 }
