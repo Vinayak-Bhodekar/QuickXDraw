@@ -1,6 +1,9 @@
 import { inner_adjustement } from "./tool-bar-2.js";
 import { buttonRender} from "./buttonsRendering.js";
 import { canvasStorage } from "./canvasStorage.js";
+import { undo, redo, undoStack, redoStack } from "./menu/undoRedoButton.js";
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
   
@@ -40,15 +43,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }));
         
         document.querySelector(".canvas-frame").innerHTML = 
-          `<canvas height=${height === 0 ? 594 : height} width=${width === 0 ? 1134:width} id="canvas-board"></canvas>`;
+          `<canvas height=${height === 0 ? 594 : height} width=${width === 0 ? 1134 : width} id="canvas-board"></canvas>`;
+        
+        const canvas = document.getElementById("canvas-board");
+
+        // pushing a blank canvas for undo button
+        if(canvas) {
+          undoStack.push(canvas.toDataURL());
+        }
+
         
         buttonRender();
         canvasStorage.autoSave();
+        canvasStorage.load();
         inner_adjustement("don't-display");
       });
     });
   }
+
+  document.getElementById("js-undo-button").addEventListener("click", undo);
+  document.getElementById("js-redo-button").addEventListener("click", redo);
+
 });
+
+
+
 
 
 

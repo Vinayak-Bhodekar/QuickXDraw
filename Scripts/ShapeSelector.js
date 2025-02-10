@@ -8,6 +8,7 @@ import { leftArrowDraw } from "./tools/Shapes/leftArrow.js";
 import { downArrowDraw } from "./tools/Shapes/downArrow.js";
 import { upArrowDraw} from "./tools/Shapes/upArrow.js";
 import { toolState } from "./tools/managingTools.js";
+import { canvasStorage } from "./canvasStorage.js";
 
 let currentShape = null;
 let currentShapeName = null;
@@ -83,6 +84,8 @@ function handleShapeSelection(shapeName, button) {
   button.classList.add('active');
   activateShape(shapeName);
   currentShapeName = shapeName;
+
+  canvasStorage.save();
 }
 
 export function colorSelector() {

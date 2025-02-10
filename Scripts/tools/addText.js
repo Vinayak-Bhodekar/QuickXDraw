@@ -1,3 +1,7 @@
+import { canvasStorage } from "../canvasStorage.js";
+import { saveCanvasState } from "../menu/undoRedoButton.js";
+
+
 export function addText() {
     const canvas = document.getElementById("canvas-board");
     const ctx = canvas.getContext("2d");
@@ -56,6 +60,8 @@ export function addText() {
         for (let i = 0; i < arr.length; i++) {
             ctx.fillText(arr[i].string, arr[i].x, arr[i].y);
         }
+        canvasStorage.save();
+        saveCanvasState();
     }
 
     function textEditz (){
@@ -92,6 +98,8 @@ export function addText() {
 
         document.body.removeEventListener("click", removeListeners);
         document.body.addEventListener("click", removeListeners);
+
+        
     }
 
     function removeListeners(event) {

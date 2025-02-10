@@ -1,5 +1,6 @@
 import { canvasStorage } from "../canvasStorage.js";
 import { toolState } from "./managingTools.js";
+import { saveCanvasState } from "../menu/undoRedoButton.js";
 
 export function paintDraw(paintColor) {
 
@@ -104,6 +105,7 @@ export function paintButtonClick() {
           // Initialize the paint functionality with the selected color
           paintDraw(colorValue);
           canvasStorage.save();
+          saveCanvasState();
         });
       }
     });

@@ -1,5 +1,7 @@
 import { colorSelector, getCurrentColor } from "../../ShapeSelector.js";
 
+import { saveCanvasState } from "../../menu/undoRedoButton.js";
+
 
 let lineWidth;
 
@@ -64,6 +66,8 @@ export function freeHand() {
     // Save current state to temp canvas
     tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
     tempCtx.drawImage(canvas, 0, 0);
+
+    saveCanvasState();
   }
 
   function handleMouseLeave() {

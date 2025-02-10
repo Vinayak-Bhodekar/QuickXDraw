@@ -1,5 +1,4 @@
-import { freeHand } from "./tools/Shapes/FreeHand.js";
-import { freeHandClick } from "./tools/Shapes/FreeHand.js";
+import { freeHand,freeHandClick } from "./tools/Shapes/FreeHand.js";
 import { shapeSelector } from "./ShapeSelector.js";
 import { paintButtonClick } from "./tools/paint.js";
 import { toolState } from "./tools/managingTools.js";
@@ -97,8 +96,7 @@ export function buttonRender() {
     if (count) {
       html += `<div class="tool js-${upload_buttons[i].name} use-tool" 
       data-tool-name="${upload_buttons[i].name}"
-      style=
-      "
+      style="
                   border-radius:15px;
                   cursor:pointer;
 
