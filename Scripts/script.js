@@ -2,6 +2,7 @@ import { inner_adjustement } from "./tool-bar-2.js";
 import { buttonRender} from "./buttonsRendering.js";
 import { canvasStorage } from "./canvasStorage.js";
 import { undo, redo, undoStack, redoStack } from "./menu/undoRedoButton.js";
+import { exportButtonHandling } from "./menu/export.js";
 
 
 
@@ -63,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById("js-undo-button").addEventListener("click", undo);
   document.getElementById("js-redo-button").addEventListener("click", redo);
+  exportButtonHandling();
 
 });
 

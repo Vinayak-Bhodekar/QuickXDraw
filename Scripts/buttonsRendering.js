@@ -5,6 +5,7 @@ import { toolState } from "./tools/managingTools.js";
 import { colorSelector } from "./ShapeSelector.js";
 import { addText,setupInputText } from "./tools/addText.js";
 
+
 let upload_buttons = [
   {
     Icon: "./Icons/Tools/pencil.png",
@@ -121,6 +122,8 @@ export function buttonRender() {
   paintButtonClick();
 
   addTextHandling();
+
+  
 }
 
 buttonRender();
@@ -148,7 +151,6 @@ function handleAddButtonClick(){
     optionAddButton.addEventListener('click', () => {
       console.log("hello");
       const rect = optionAddButton.getBoundingClientRect();
-      const rect1 = optionMenu.getBoundingClientRect();
       let Top = rect.top;
       let Left = rect.left;
       if (optionMenu.style.display === "none" || optionMenu.style.display === "") {
