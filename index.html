@@ -16,7 +16,10 @@
       <h1>QuickDraw</h1>
     </header>
     <main class="main">
-      <div class="menu-frame">
+      <div class="canvas-frame">
+        <canvas id="canvas-board"></canvas>
+      </div>
+      <div class="menu-frame js-options">
         <div class="menu-icons">
           <img src="./Icons/Menu-bar/settings.png" alt="setting">
         </div>
@@ -33,18 +36,30 @@
           <img src="./Icons/Menu-bar/download.png" alt="redo">
         </div>
       </div>
-      <div class="canvas-frame">
-        <div class="canvas-add-button">
-          <img src="Icons/Canvas-add.png" alt="add">
-        </div>
-      </div>
-      <div class="divider"></div>
       <div class="tool-section">
-        <div class="tool-frame">
+        <div class="tool-frame js-options">
+          <div class="tool js-freeHand use-tool" data-tool-name="freeHand">
+            <img src="Icons/Tools/pencil.png" alt="Pencil">
+          </div>
+
+          <div class="tool js-shapes use-tool" data-tool-name="shapes">
+            <img src="Icons/Tools/shapes.png" alt="Shapes">
+          </div>
+
+          <div class="tool js-bucket use-tool" data-tool-name="paint">
+            <img src="Icons/Tools/bucket.png" alt="Paint">
+          </div>
+
+          <div class="tool js-text use-tool" data-tool-name="text">
+            <img src="Icons/Tools/text-size.png" alt="Text">
+          </div>
+
+          <div class="tool js-eraser use-tool" data-tool-name="eraser">
+            <img src="Icons/Tools/eraser.png" alt="Eraser">
+          </div>
         </div>
-        <div class="partition"></div>
-        <div class="tool-frame-2"></div>
       </div>
+      <div class="tool-frame-2 js-options"></div>
     </main>
     <footer class="footer"></footer>
   </div>
@@ -57,3 +72,4 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
+

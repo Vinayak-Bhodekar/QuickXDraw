@@ -1,3 +1,11 @@
+:root {
+  --header-height: 60px;
+  --menu-width: 50px;
+  --primary: #2c2c2c;
+  --surface: #ffffff;
+  --shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
 /* General Styles */
 * {
   margin: 0;
@@ -13,116 +21,125 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  overflow: hidden;
 }
 
-/* Header Styling */
+/* Header */
 .header {
-  background-color: blue;
+  height: var(--header-height);
+  background-color: var(--primary);
   color: white;
-  text-align: center;
-  padding: 10px;
-  font-size: 24px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 100;
 }
 
-/* Main Section */
+/* Main section */
 .main {
-  display: flex;
-  flex-direction: row;
-  flex: 1;
+  position: relative;
+  height: calc(100vh - var(--header-height));
   background-color: #f9f9f9;
   overflow: hidden;
 }
 
-/* Menu Frame */
-.menu-frame {
-  width: 60px;
-  background-color: #2c2c2c;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 20px 0;
-}
-
-.icon {
-  margin: 20px 0;
-  font-size: 24px;
-  color: white;
-}
-
-/* Canvas Frame */
+/* Canvas Frame - Full size without padding */
 .canvas-frame {
-  flex: 3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  background-color: grey;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0;  /* Removed padding */
 }
 
-.canvas {
-  width: 688px;
-  height: 640px;
-  background-color: #d3d3d3;
-  border-radius: 8px;
+/* Canvas styling - full size */
+#canvas-board {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  border-radius: 0;
+  box-shadow: none;
+  touch-action: none; /* Prevents touch scrolling while drawing */
 }
 
-/* Divider */
-.divider {
-  width: 2px;
-  background-color: #000000;
-}
-
-/* Tool Section */
+/* Tool Section - Floating */
 .tool-section {
+  position: fixed;
+  right: 15px;  /* Slightly adjusted */
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+}
+
+/* Left Menu Frame - Floating */
+.menu-frame {
+  position: fixed;
+  left: 15px;  /* Slightly adjusted */
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--menu-width);
+  background-color: #2c2c2c;
+  border-radius: 12px;
+  padding: 10px 8px;
   display: flex;
   flex-direction: column;
+  gap: 12px;
+  box-shadow: var(--shadow);
+  z-index: 20;
   align-items: center;
-  justify-content: flex-start;
-  width: 300px;
-  background-color: #f4f4f4;
-  padding: 10px 0;
 }
 
-/* Partition between Containers */
-.partition {
-  width: 100%;
-  height: 2px;
-  background-color: #414141;
-  margin: 10px 0;
-}
-
-/* Tool Frame (shared styles for both frames) */
+/* Right Tool Frame - Floating */
 .tool-frame {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columns */
-  grid-auto-rows: minmax(0, 1fr); /* Ensure proportional rows */
-  gap: 10px;
-  width: 100%; /* Full width of the container */
-  aspect-ratio: 3 / 4; /* Maintain 3x4 layout */
-}
-
-/* Tool Elements */
-.tool {
-  background-color: white;
-  border-radius: 4px;
+  width: var(--menu-width);
+  background-color: #2c2c2c;
+  border-radius: 12px;
+  padding: 10px 8px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: var(--shadow);
   align-items: center;
-  font-size: 14px;
-  color: #000;
-  text-align: center;
 }
 
-.use-tool:hover{
-  background-color: rgb(217, 216, 216);
-  border: 2px solid grey;
+/* Bottom Tool Frame */
+.tool-frame-2 {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  background-color: #2c2c2c;
+  border-radius: 12px;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  box-shadow: var(--shadow);
+  z-index: 20;
+  min-width: 200px;
+  max-width: 90%;
 }
 
-/* Footer Styling */
-.footer {
-  height: 20px;
-  background-color: #f1f1f1;
+/* Remove divider and footer */
+.divider, .footer {
+  display: none;
+}
+
+/* Tool and menu icons */
+.menu-icons img, .tool img {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+  filter: invert(1);
+}
+
+.menu-icons:hover img, .tool:hover img {
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 /* Add Button Styling */
@@ -152,13 +169,8 @@ body {
   background-color: #f0f0f0;
 }
 
-
 .footer{
   background-color: #000000;
-}
-
-#canvas-board {
-  background-color:#ccc;
 }
 
 .shape:hover{
@@ -237,4 +249,21 @@ body {
   color: #333; /* Color for the label */
 }
 
+/* Active tool state */
+.tool.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+}
 
+
+.hide {
+  display: none;
+}
+
+.js-options {
+  transition: opacity 0.3s ease;
+}
+
+.menu-frame, .tool-frame, .tool-frame-2 {
+  transition: opacity 0.3s ease;
+}

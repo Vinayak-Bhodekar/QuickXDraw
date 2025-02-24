@@ -4,32 +4,9 @@ import { paintButtonClick } from "./tools/paint.js";
 import { toolState } from "./tools/managingTools.js";
 import { colorSelector } from "./ShapeSelector.js";
 import { addText,setupInputText } from "./tools/addText.js";
+import { eraserClick,eraser } from "./tools/eraser.js";
 
 
-let upload_buttons = [
-  {
-    Icon: "./Icons/Tools/pencil.png",
-    name: "freeHand"
-  },
-  {
-    Icon: "./Icons/Tools/shapes.png",
-    name: "shapes"
-  },
-  {
-    Icon: "./Icons/Tools/plus.png",
-    name: "Add"
-  },
-];
-let buttons = [
-  {
-    Icon: "./Icons/Tools/bucket.png",
-    name: "bucket"
-  },
-  {
-    Icon: "./Icons/Tools/text-size.png",
-    name: "text"
-  },
-];
 
 const shapes = [
   {
@@ -70,48 +47,13 @@ const shapes = [
   },
 ]
 
-const storedButtons = localStorage.getItem('upload_buttons');
-if(storedButtons){
-  upload_buttons = JSON.parse(storedButtons);
-}
-else {
-  localStorage.setItem('upload_buttons',JSON.stringify(upload_buttons));
-}
-
-const storedbuttons2 = localStorage.getItem('buttons');
-if(storedbuttons2){
-  buttons = JSON.parse(storedbuttons2);
-}
-else{
-  localStorage.setItem('buttons',JSON.stringify(buttons));
-}
-
 const optionMenu = document.querySelector(".option-menu");
 
 // Render buttons.
 
 export function buttonRender() {
-  let html = ``;
-  let count = upload_buttons.length;
-  for (let i = 0; i < 12; i++) {
-    if (count) {
-      html += `<div class="tool js-${upload_buttons[i].name} use-tool" 
-      data-tool-name="${upload_buttons[i].name}"
-      style="
-                  border-radius:15px;
-                  cursor:pointer;
-
-                "
-              ><img src="${upload_buttons[i].Icon}"></div>`;
-    
-      count--;
-    } else {
-      html += `<div class="tool"></div>`;
-    }
-  }
-  document.querySelector(".tool-frame").innerHTML = html;
   
-  handleAddButtonClick();    // add button handling
+  //handleAddButtonClick();    // add button handling
 
   shapeButtonClick(); // shape button handling
 
@@ -123,12 +65,15 @@ export function buttonRender() {
 
   addTextHandling();
 
+  eraserClick();
   
+  EraseFuction();
 }
 
 buttonRender();
 
   //Create option menu.
+
 
 function CreateOptionMenu(arr){
 
@@ -274,3 +219,12 @@ function addTextHandling() {
   } 
   
 }
+
+function EraseFuction() {
+  const handleEraserHand = () => {
+    eraser();
+  }
+  document.querySelector(".js-eraser").removeEventListener('click',handleEraserHand);
+  document.querySelector(".js-eraser").addEventListener('click', handleEraserHand);
+  
+} 

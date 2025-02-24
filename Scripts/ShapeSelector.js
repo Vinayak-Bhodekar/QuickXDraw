@@ -88,16 +88,23 @@ function handleShapeSelection(shapeName, button) {
   canvasStorage.save();
 }
 
-export function colorSelector() {
-  const colorInput = document.getElementById("shapeColor");
-  if (colorInput) {
-    colorInput.addEventListener('input', (event) => {
-      color = event.target.value; // Update the global color variable
-      console.log(color);
-    });
-  } else {
-    console.error("Color input not found!");
+export function colorSelector(preColor) {
+  if(preColor) {
+    console.log(color);
+    color = preColor;
   }
+  else {
+    const colorInput = document.getElementById("shapeColor");
+    if (colorInput) {
+      colorInput.addEventListener('input', (event) => {
+        color = event.target.value; // Update the global color variable
+        console.log(color);
+      });
+    } else {
+      console.error("Color input not found!");
+    }
+  }
+  
 }
 
 export function strokeSelector() {

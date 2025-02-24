@@ -26,3 +26,38 @@
   height: 30px;
 }
 
+
+.js-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+.js-color-box {
+  display: grid;
+  grid-template-columns: repeat(6, 40px);
+  grid-template-rows: repeat(2, 40px);
+  gap: 5px;
+  padding: 10px;
+  background: transparent;
+  
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+.js-box {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #999;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.js-box:hover {
+  transform: scale(1.1);
+  border-color: #333;
+}
+
+.js-box.active {
+  border: 2px solid #000;
+  transform: scale(1.1);
+}

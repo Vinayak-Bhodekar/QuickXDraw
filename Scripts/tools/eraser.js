@@ -1,13 +1,10 @@
-import { colorSelector, getCurrentColor } from "../../ShapeSelector.js";
-
-import { saveCanvasState } from "../../menu/undoRedoButton.js";
-
-import { canvasStorage } from "../../canvasStorage.js";
-
+import { saveCanvasState } from "../menu/undoRedoButton.js";
+import { canvasStorage } from "../canvasStorage.js";
 
 let lineWidth;
 
-export function freeHand() {
+export function eraser() {
+  
   const canvas = document.getElementById('canvas-board');
   const ctx = canvas.getContext('2d');
 
@@ -16,9 +13,6 @@ export function freeHand() {
   tempCanvas.width = canvas.width;
   tempCanvas.height = canvas.height;
   const tempCtx = tempCanvas.getContext('2d');
-
-  // Copy current canvas state to temp canvas
-  tempCtx.drawImage(canvas, 0, 0);
 
   let isDrawing = false;
   let startX = 0;
@@ -52,6 +46,7 @@ export function freeHand() {
   }
 
   function handleMouseDown(event) {
+    
     hideMenus();
     isDrawing = true;
     const { x, y } = getMousePosition(event);
@@ -59,8 +54,8 @@ export function freeHand() {
     startY = y;
 
     // Set line style before starting path
-    ctx.strokeStyle = getCurrentColor();
-    ctx.lineWidth = lineWidth || 1;
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = lineWidth || 5;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
 
@@ -91,10 +86,8 @@ export function freeHand() {
     // Save current state to temp canvas
     tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
     tempCtx.drawImage(canvas, 0, 0);
-    console.log("free hand draw",getCurrentColor());
-    canvasStorage.save();
     saveCanvasState();
-    
+    canvasStorage.save();
   }
 
   function handleMouseLeave() {
@@ -125,17 +118,15 @@ export function freeHand() {
   };
 }
 
-export function freeHandClick(){
-  document.querySelector(".js-freeHand").addEventListener('click', () => {
+export function eraserClick(){
+  document.querySelector(".js-eraser").addEventListener('click', () => {
     let html = "";
     html = `<div>
               <input type="range" min="0" max="100" value="50" class="slider" id="mySlider">
               
-              <input type="color" value="#000000" id="shapeColor">
           </div>`;
     document.querySelector(".tool-frame-2").innerHTML = html;
 
-    colorSelector();
 
     document.getElementById("mySlider").addEventListener('input',(event) => {
       lineWidth =  event.target.value;
