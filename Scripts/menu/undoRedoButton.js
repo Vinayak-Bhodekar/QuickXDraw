@@ -10,10 +10,9 @@ export let redoStack = JSON.parse(localStorage.getItem("redostack")) || [];
 export function saveCanvasState(isUndoRedoOperation = false) {
     const canvas = document.getElementById("canvas-board");
     const ctx = canvas.getContext("2d");
-    const state = canvas.toDataURL(); // Save the current state as a data URL
-    undoStack.push(state); // Push the current state onto the undo stack
+    const state = canvas.toDataURL();
+    undoStack.push(state);
     
-    // Only clear redoStack if this is a new drawing action, not an undo/redo
     if (!isUndoRedoOperation) {
         redoStack = []; // Clear the redo stack only on new drawing actions
     }
@@ -73,3 +72,7 @@ export function redo() {
     
 }
 
+export function handlingUndoRedoButton() {
+    document.getElementById("js-undo-button").addEventListener('click',undo);
+    document.getElementById("js-redo-button").addEventListener('click',redo);
+}

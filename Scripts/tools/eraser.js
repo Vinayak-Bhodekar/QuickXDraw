@@ -1,5 +1,6 @@
 import { saveCanvasState } from "../menu/undoRedoButton.js";
 import { canvasStorage } from "../canvasStorage.js";
+import { toolState } from "./managingTools.js";
 
 let lineWidth;
 
@@ -103,19 +104,13 @@ export function eraser() {
     
   }
 
-  // Add event listeners
-  canvas.addEventListener('mousedown', handleMouseDown);
-  canvas.addEventListener('mousemove', handleMouseMove);
-  canvas.addEventListener('mouseup', handleMouseUp);
-  canvas.addEventListener('mouseleave', handleMouseLeave);
-
-  // Return the event handlers
-  return {
+  // Set up the eraser tool with all its handlers
+  toolState.setCurrentTool('eraser', {
     mousedown: handleMouseDown,
     mousemove: handleMouseMove,
     mouseup: handleMouseUp,
     mouseleave: handleMouseLeave
-  };
+  });
 }
 
 export function eraserClick(){

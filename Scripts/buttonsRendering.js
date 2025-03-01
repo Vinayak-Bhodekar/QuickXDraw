@@ -177,11 +177,10 @@ function shapeButtonClick() {
 
     let shapesHtml = '';
     shapes.forEach(shape => {
-      shapesHtml += `<div class="js-shape-selector shape" data-shape-name="${shape.name}">
-        ${shape.name}-<img width="15" height="15" src="${shape.Icon}">
-      </div>`;
+      shapesHtml += `<div class="js-shape-selector shape" data-shape-name="${shape.name}"><img src="${shape.Icon}" width ="20" height="20" alt="Placeholder"></div>`;
     });
 
+    
     const html = `
       <div class="shapes-container">
         <div class="shapes-column">

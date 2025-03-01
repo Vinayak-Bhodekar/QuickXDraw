@@ -1,7 +1,7 @@
 import { inner_adjustement } from "./tool-bar-2.js";
 import { buttonRender} from "./buttonsRendering.js";
 import { canvasStorage } from "./canvasStorage.js";
-import { undo, redo, undoStack, redoStack } from "./menu/undoRedoButton.js";
+import { handlingUndoRedoButton,saveCanvasState} from "./menu/undoRedoButton.js";
 import { exportButtonHandling } from "./menu/export.js";
 import { handleDeleteButton } from "./menu/delete.js";
 
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
     
-    // Try to restore saved canvas
+    
     const savedCanvas = localStorage.getItem("savedCanvas");
     if (savedCanvas) {
       const img = new Image();
@@ -28,12 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Set up auto-save
     canvasStorage.autoSave();
+    saveCanvasState();
   }
 
   // Initialize buttons and event handlers
   buttonRender();
   exportButtonHandling();
   handleDeleteButton();
+  handlingUndoRedoButton();
 
   // Mark canvas as created
   localStorage.setItem("canvasCreated", 'true');

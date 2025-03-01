@@ -6,7 +6,6 @@ import { colorSelector,getCurrentColor } from "../ShapeSelector.js";
 export function paintDraw() {
   const canvas = document.getElementById('canvas-board');
   const ctx = canvas.getContext('2d');
-  const paintColor = getCurrentColor();
 
   function getMousePosition(event) {
     const rect = canvas.getBoundingClientRect();
@@ -77,13 +76,14 @@ export function paintDraw() {
   }
 
   function handleMouseDown(event) {
-    if (toolState.currentTool !== 'paint') return;
     const { x, y } = getMousePosition(event);
-    floodfill(x, y, paintColor);
+    floodfill(x, y, getCurrentColor());
   }
 
-  // Set up the paint tool
-  toolState.setCurrentTool('paint', handleMouseDown);
+  // Set up the paint tool with all its handlers
+  toolState.setCurrentTool('paint', {
+    mousedown: handleMouseDown
+  });
 }
 
 export function paintButtonClick() {
