@@ -53,8 +53,6 @@ const optionMenu = document.querySelector(".option-menu");
 
 export function buttonRender() {
   
-  //handleAddButtonClick();    // add button handling
-
   shapeButtonClick(); // shape button handling
 
   freeHandFunction(); // free hand handling.

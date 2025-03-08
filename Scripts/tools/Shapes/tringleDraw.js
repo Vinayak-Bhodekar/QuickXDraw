@@ -24,32 +24,42 @@ export function triangleDraw() {
       y: event.clientY - rect.top,
     };
   }
+  
+  
+  function getTouchPosition(event) {
+    const touch = event.touches[0];
+    return getMousePosition(touch);
+  }
 
   function handleMouseDown(event) {
+    event.preventDefault();
     isDrawing = true;
-    const {x,y} = getMousePosition(event);
-    startX = x;
-    startY = y;
+    const pos = event.type === "touchstart" ? getTouchPosition(event) : getMousePosition(event);
+    startX = pos.x;
+    startY = pos.y;
     tempCtx.clearRect(0,0,tempCanvas.width,tempCanvas.height);
     tempCtx.drawImage(canvas,0,0);
   }
 
   function handleMouseMove(event) {
     if(!isDrawing) return;
-    const {x,y} = getMousePosition(event);
+    event.preventDefault();
+
+    const pos = event.type === "touchmove" ? getTouchPosition(event) : getMousePosition(event);
     ctx.clearRect(0,0,tempCanvas.width, tempCanvas.height);
     ctx.drawImage(tempCanvas,0,0);
-    width = Math.sqrt(((x-startX)**2) + ((startY-startY)**2));
-    height = Math.sqrt(((x-x)**2) + ((y-startY)**2));
-    DrawTriangle(x,y,height,width,ctx);
+    width = Math.sqrt(((pos.x-startX)**2) + ((startY-startY)**2));
+    height = Math.sqrt(((pos.x-pos.x)**2) + ((pos.y-startY)**2));
+    DrawTriangle(pos.x,pos.y,height,width,ctx);
   }
 
   function handleMouseUp(event) {
+    event.preventDefault();
     if(!isDrawing) return;
     isDrawing = false;
-    const {x,y} = getMousePosition(event);
+    const pos = event.type === "touchmove" ? getTouchPosition(event) : getMousePosition(event);
     ctx.drawImage(tempCanvas,0,0);
-    DrawTriangle(x,y,height,width,ctx);
+    DrawTriangle(pos.x,pos.y,height,width,ctx);
   }
 
   function handleMouseLeave() {
@@ -81,6 +91,9 @@ export function triangleDraw() {
   canvas.addEventListener('mouseup', handleMouseUp);
   canvas.addEventListener('mouseleave', handleMouseLeave);
 
+  canvas.addEventListener('touchstart', handleMouseDown);
+  canvas.addEventListener('touchmove', handleMouseMove);
+  canvas.addEventListener('touchend', handleMouseUp);
   // Return the event handlers
   return {
     mousedown: handleMouseDown,

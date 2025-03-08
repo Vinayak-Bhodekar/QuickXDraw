@@ -1,5 +1,4 @@
-import { colorSelector, getCurrentColor ,strokeSelector, getCurrentStroke} from "../../ShapeSelector.js";
-
+import { colorSelector, getCurrentColor, strokeSelector, getCurrentStroke } from "../../ShapeSelector.js";
 
 export function downArrowDraw() {
   const canvas = document.getElementById('canvas-board');
@@ -14,6 +13,7 @@ export function downArrowDraw() {
   let startX = 0, startY = 0;
   let width = 0, height = 0;
 
+  colorSelector();
   strokeSelector();
 
   function getMousePosition(event) {
@@ -23,38 +23,42 @@ export function downArrowDraw() {
       y: event.clientY - rect.top,
     };
   }
+  
+  function getTouchPosition(event) {
+    const touch = event.touches[0];
+    return getMousePosition(touch);
+  }
 
   function handleMouseDown(event) {
+    event.preventDefault();
     isDrawing = true;
-    const {x,y} = getMousePosition(event);
-    startX = x;
-    startY = y;
+    const pos = event.type === "touchstart" ? getTouchPosition(event) : getMousePosition(event);
+    startX = pos.x;
+    startY = pos.y;
     tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
     tempCtx.drawImage(canvas, 0, 0);
   }
 
   function handleMouseMove(event) {
-    if(!isDrawing) return;
-    const {x,y} = getMousePosition(event);
-    
-    // Clear the main canvas and restore the previous state
+    event.preventDefault();
+    if (!isDrawing) return;
+    const pos = event.type === "touchstart" ? getTouchPosition(event) : getMousePosition(event);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(tempCanvas, 0, 0);
     
-    width = x - startX;
-    height = y - startY;
-    DrawDownArrow(x, y, height, width);
+    width = pos.x - startX;
+    height = pos.y - startY;
+    DrawDownArrow(pos.x, pos.y, height, width);
   }
 
   function handleMouseUp(event) {
-    if(!isDrawing) return;
+    event.preventDefault();
+    if (!isDrawing) return;
     isDrawing = false;
-    const {x,y} = getMousePosition(event);
-    
-    
-    width = x - startX;
-    height = y - startY;
-    DrawDownArrow(x, y, height, width);
+    const pos = event.type === "touchstart" ? getTouchPosition(event) : getMousePosition(event);
+    width = pos.x - startX;
+    height = pos.y - startY;
+    DrawDownArrow(pos.x, pos.y, height, width);
   }
 
   function handleMouseLeave() {
@@ -62,26 +66,29 @@ export function downArrowDraw() {
   }
 
   function DrawDownArrow(x, y, height, width) {
-    
     ctx.beginPath();
-    ctx.moveTo(startX + (width/2), startY);
-    ctx.lineTo(startX + (width/2), y);
+    ctx.moveTo(startX + (width / 2), startY);
+    ctx.lineTo(startX + (width / 2), y);
     ctx.strokeStyle = getCurrentColor();
     ctx.lineWidth = getCurrentStroke();
     ctx.stroke();
     ctx.closePath();
 
-    
     ctx.beginPath();
-    ctx.moveTo(startX, y - (height/4));
-    ctx.lineTo(startX + (width/2), y);
-    ctx.lineTo(x, y - (height/4));
+    ctx.moveTo(startX, y - (height / 4));
+    ctx.lineTo(startX + (width / 2), y);
+    ctx.lineTo(x, y - (height / 4));
     ctx.strokeStyle = getCurrentColor();
     ctx.lineWidth = getCurrentStroke();
     ctx.stroke();
     ctx.closePath();
   }
 
+  canvas.addEventListener('touchstart', handleMouseDown);
+  canvas.addEventListener('touchmove', handleMouseMove);
+  canvas.addEventListener('touchend', handleMouseUp);
+
+  
   canvas.addEventListener('mousedown', handleMouseDown);
   canvas.addEventListener('mousemove', handleMouseMove);
   canvas.addEventListener('mouseup', handleMouseUp);
@@ -94,6 +101,7 @@ export function downArrowDraw() {
     mouseleave: handleMouseLeave
   };
 }
+
 
 export function downArrowClick() {
   document.querySelector(".js-downArrow").addEventListener('click', () => {

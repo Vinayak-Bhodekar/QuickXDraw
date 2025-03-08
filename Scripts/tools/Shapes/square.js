@@ -25,34 +25,52 @@ export function squareDraw() {
     };
   }
 
+  
+  function getTouchPosition(event) {
+    const touch = event.touches[0];
+    return getMousePosition(touch);
+  }
+
+
   function handleMouseDown(event){
+    event.preventDefault();
     isDrawing = true;
-    const {x,y} = getMousePosition(event);
-    startX = x;
-    startY = y;
+    const pos = event.type === "touchstart" ? getTouchPosition(event) : getMousePosition(event);
+    startX = pos.x;
+    startY = pos.y;
     tempctx.clearRect(0,0,tempCanvas.width,tempCanvas.height);
     tempctx.drawImage(canvas,0,0);
   }
 
   function handleMouseMove(event){
     if(!isDrawing) return;
-    const {x,y} = getMousePosition(event);
+    event.preventDefault();
+
+    const pos = event.type === "touchmove" ? getTouchPosition(event) : getMousePosition(event);
+
     ctx.clearRect(0,0,tempCanvas.width,tempCanvas.height);
     ctx.drawImage(tempCanvas,0,0);
-    width = x - startX;
+    width = pos.x - startX;
     DrawSquare(width,ctx);
   }
 
   function handleMouseUp(event){
+    
     if(!isDrawing) return;
+    event.preventDefault();
     isDrawing = false;
-    const {x,y} = getMousePosition(event);
+    const pos = event.type === "touchend" ? { x: startX, y: startY } : getMousePosition(event);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(tempCanvas,0,0);
     DrawSquare(width,ctx);
   }
 
   function handleMouseLeave(){
+    if (!isDrawing) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(tempCanvas, 0, 0);
+
     isDrawing = false;
   }
 
@@ -69,6 +87,10 @@ export function squareDraw() {
   canvas.addEventListener('mousemove', handleMouseMove);
   canvas.addEventListener('mouseup', handleMouseUp);
   canvas.addEventListener('mouseleave', handleMouseLeave);
+
+  canvas.addEventListener('touchstart', handleMouseDown);
+  canvas.addEventListener('touchmove', handleMouseMove);
+  canvas.addEventListener('touchend', handleMouseUp);
 
   return {
     mousedown: handleMouseDown,

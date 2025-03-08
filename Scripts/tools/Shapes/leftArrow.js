@@ -24,38 +24,44 @@ export function leftArrowDraw() {
     };
   }
 
+  
+  function getTouchPosition(event) {
+    const touch = event.touches[0];
+    return getMousePosition(touch);
+  }
+
   function handleMouseDown(event) {
+    event.preventDefault();
     isDrawing = true;
-    const {x,y} = getMousePosition(event);
-    startX = x;
-    startY = y;
+    const pos = event.type === "touchstart" ? getTouchPosition(event) : getMousePosition(event);
+    startX = pos.x;
+    startY = pos.y;
     // Save current canvas state
     tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
     tempCtx.drawImage(canvas, 0, 0);
   }
 
   function handleMouseMove(event) {
+    event.preventDefault();
     if(!isDrawing) return;
-    const {x,y} = getMousePosition(event);
-    
+    const pos = event.type === "touchstart" ? getTouchPosition(event) : getMousePosition(event);
     // Clear the main canvas and restore the previous state
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(tempCanvas, 0, 0);
     
-    width = x - startX;
-    height = y - startY;
-    DrawLeftArrow(x, y, height, width);
+    width = pos.x - startX;
+    height = pos.y - startY;
+    DrawLeftArrow(pos.x, pos.y, height, width);
   }
 
   function handleMouseUp(event) {
+    event.preventDefault();
     if(!isDrawing) return;
     isDrawing = false;
-    const {x,y} = getMousePosition(event);
-    
-    // Draw final shape
-    width = x - startX;
-    height = y - startY;
-    DrawLeftArrow(x, y, height, width);
+    const pos = event.type === "touchstart" ? getTouchPosition(event) : getMousePosition(event);
+    width = pos.x - startX;
+    height = pos.y - startY;
+    DrawLeftArrow(pos.x, pos.y, height, width);
   }
 
   function handleMouseLeave() {
@@ -87,6 +93,11 @@ export function leftArrowDraw() {
   canvas.addEventListener('mousemove', handleMouseMove);
   canvas.addEventListener('mouseup', handleMouseUp);
   canvas.addEventListener('mouseleave', handleMouseLeave);
+
+
+  canvas.addEventListener('touchstart', handleMouseDown);
+  canvas.addEventListener('touchmove', handleMouseMove);
+  canvas.addEventListener('touchend', handleMouseUp);
 
   return {
     mousedown: handleMouseDown,

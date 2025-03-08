@@ -1,6 +1,5 @@
 import { colorSelector, getCurrentColor, strokeSelector, getCurrentStroke } from "../../ShapeSelector.js";
 
-
 export function upArrowDraw() {
   const canvas = document.getElementById('canvas-board');
   const ctx = canvas.getContext('2d');
@@ -24,39 +23,45 @@ export function upArrowDraw() {
       y: event.clientY - rect.top,
     };
   }
+  
+  function getTouchPosition(event) {
+    const touch = event.touches[0];
+    return getMousePosition(touch);
+  }
+
 
   function handleMouseDown(event) {
+    event.preventDefault();
     isDrawing = true;
-    const {x,y} = getMousePosition(event);
-    startX = x;
-    startY = y;
-    // Save current canvas state
+    const pos = event.type === "touchstart" ? getTouchPosition(event) : getMousePosition(event);
+    startX = pos.x;
+    startY = pos.y;
     tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
     tempCtx.drawImage(canvas, 0, 0);
   }
 
   function handleMouseMove(event) {
-    if(!isDrawing) return;
-    const {x,y} = getMousePosition(event);
-    
-    // Clear the main canvas and restore the previous state
+    event.preventDefault();
+    if (!isDrawing) return;
+    const pos = event.type === "touchstart" ? getTouchPosition(event) : getMousePosition(event);
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(tempCanvas, 0, 0);
     
-    width = x - startX;
-    height = startY - y;
-    DrawUpArrow(x, y, height, width);
+    width = pos.x - startX;
+    height = startY - pos.y;
+    DrawUpArrow(pos.x, pos.y, height, width);
   }
 
   function handleMouseUp(event) {
-    if(!isDrawing) return;
+    if (!isDrawing) return;
     isDrawing = false;
-    const {x,y} = getMousePosition(event);
-    
-    // Draw final shape
-    width = x - startX;
-    height = startY - y;
-    DrawUpArrow(x, y, height, width);
+    event.preventDefault();
+    const pos = event.type === "touchstart" ? getTouchPosition(event) : getMousePosition(event);
+
+    width = pos.x - startX;
+    height = startY - pos.y;
+    DrawUpArrow(pos.x, pos.y, height, width);
   }
 
   function handleMouseLeave() {
@@ -64,26 +69,29 @@ export function upArrowDraw() {
   }
 
   function DrawUpArrow(x, y, height, width) {
-    // Draw the arrow line
     ctx.beginPath();
-    ctx.moveTo(startX + (width/2), startY);
-    ctx.lineTo(startX + (width/2), y);
+    ctx.moveTo(startX + (width / 2), startY);
+    ctx.lineTo(startX + (width / 2), y);
     ctx.strokeStyle = getCurrentColor();
     ctx.lineWidth = getCurrentStroke();
     ctx.stroke();
     ctx.closePath();
 
-    // Draw the arrow head
     ctx.beginPath();
-    ctx.moveTo(startX, y + (height/4));
-    ctx.lineTo(startX + (width/2), y);
-    ctx.lineTo(x, y + (height/4));
+    ctx.moveTo(startX, y + (height / 4));
+    ctx.lineTo(startX + (width / 2), y);
+    ctx.lineTo(x, y + (height / 4));
     ctx.strokeStyle = getCurrentColor();
     ctx.lineWidth = getCurrentStroke();
     ctx.stroke();
     ctx.closePath();
   }
 
+  canvas.addEventListener('touchstart', handleMouseDown);
+  canvas.addEventListener('touchmove', handleMouseMove);
+  canvas.addEventListener('touchend', handleMouseUp);
+
+  
   canvas.addEventListener('mousedown', handleMouseDown);
   canvas.addEventListener('mousemove', handleMouseMove);
   canvas.addEventListener('mouseup', handleMouseUp);
@@ -96,6 +104,8 @@ export function upArrowDraw() {
     mouseleave: handleMouseLeave
   };
 }
+
+
 
 export function upArrowClick() {
   document.querySelector(".js-upArrow").addEventListener('click', () => {

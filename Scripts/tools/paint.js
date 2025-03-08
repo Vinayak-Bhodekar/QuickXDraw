@@ -76,6 +76,9 @@ export function paintDraw() {
   }
 
   function handleMouseDown(event) {
+    
+    if (toolState.currentTool !== 'paint') return;
+    
     const { x, y } = getMousePosition(event);
     floodfill(x, y, getCurrentColor());
   }

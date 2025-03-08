@@ -26,8 +26,16 @@ export function CreateRectangle(){
     };
   }
 
+  
+  function getTouchPosition(event) {
+    const touch = event.touches[0];
+    return getMousePosition(touch);
+  }
+
+
   function handleMouseDown(event){
-    const pos = getMousePosition(event);
+    event.preventDefault();
+    const pos = event.type === "touchstart" ? getTouchPosition(event) : getMousePosition(event);
     isDrawing = true;
     startX = pos.x;
     startY = pos.y;
@@ -37,8 +45,9 @@ export function CreateRectangle(){
   }
 
   function handleMouseMove(event){
+    event.preventDefault();
     if(!isDrawing) return;
-    const pos = getMousePosition(event);
+    const pos = event.type === "touchstart" ? getTouchPosition(event) : getMousePosition(event);
     
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(tempCanvas, 0, 0);
@@ -55,9 +64,10 @@ export function CreateRectangle(){
   }
 
   function handleMouseUp(event){
+    event.preventDefault();
     if (!isDrawing) return;
     
-    const pos = getMousePosition(event);
+    const pos = event.type === "touchstart" ? getTouchPosition(event) : getMousePosition(event);
     width = pos.x - startX;
     height = pos.y - startY;
     
@@ -75,6 +85,7 @@ export function CreateRectangle(){
   }
 
   function handleMouseLeave(){
+    
     if (!isDrawing) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(tempCanvas, 0, 0);
@@ -86,6 +97,10 @@ export function CreateRectangle(){
   canvas.addEventListener('mousemove', handleMouseMove);
   canvas.addEventListener('mouseup', handleMouseUp);
   canvas.addEventListener('mouseleave', handleMouseLeave);
+
+  canvas.addEventListener('touchstart', handleMouseDown);
+  canvas.addEventListener('touchmove', handleMouseMove);
+  canvas.addEventListener('touchend', handleMouseUp);
 
   return {
     mousedown:handleMouseDown,

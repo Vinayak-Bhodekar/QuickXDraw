@@ -23,8 +23,16 @@ export function lineDraw() {
     };
   }
 
+  
+  function getTouchPosition(event) {
+    const touch = event.touches[0];
+    return getMousePosition(touch);
+  }
+
   function handleMouseDown(event) {
-    const pos = getMousePosition(event);
+
+    event.preventDefault();
+    const pos = event.type === "touchend" ? { x: startX, y: startY } : getMousePosition(event);
     isDrawing = true;
     startX = pos.x;
     startY = pos.y;
@@ -34,9 +42,10 @@ export function lineDraw() {
   }
 
   function handleMouseMove(event) {
+    event.preventDefault();
     if (!isDrawing) return;
     
-    const pos = getMousePosition(event);
+    const pos = event.type === "touchend" ? { x: startX, y: startY } : getMousePosition(event);
     
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
@@ -52,8 +61,9 @@ export function lineDraw() {
 
   function handleMouseUp(event) {
     if (!isDrawing) return;
+    event.preventDefault();
     
-    const pos = getMousePosition(event);
+    const pos = event.type === "touchend" ? { x: startX, y: startY } : getMousePosition(event);
     
     ctx.beginPath();
     ctx.moveTo(startX, startY);
@@ -76,6 +86,10 @@ export function lineDraw() {
     
     isDrawing = false;
   }
+
+  canvas.addEventListener('touchstart', handleMouseDown);
+  canvas.addEventListener('touchmove', handleMouseMove);
+  canvas.addEventListener('touchend', handleMouseUp);
 
   canvas.addEventListener('mousedown', handleMouseDown);
   canvas.addEventListener('mousemove', handleMouseMove);

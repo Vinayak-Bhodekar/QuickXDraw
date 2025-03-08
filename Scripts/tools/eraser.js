@@ -2,130 +2,118 @@ import { saveCanvasState } from "../menu/undoRedoButton.js";
 import { canvasStorage } from "../canvasStorage.js";
 import { toolState } from "./managingTools.js";
 
-let lineWidth;
+let lineWidth = 5; // Default eraser size
 
 export function eraser() {
-  
-  const canvas = document.getElementById('canvas-board');
-  const ctx = canvas.getContext('2d');
-
-  // Create temporary canvas for preview
-  const tempCanvas = document.createElement('canvas');
-  tempCanvas.width = canvas.width;
-  tempCanvas.height = canvas.height;
-  const tempCtx = tempCanvas.getContext('2d');
+  const canvas = document.getElementById("canvas-board");
+  const ctx = canvas.getContext("2d");
 
   let isDrawing = false;
-  let startX = 0;
-  let startY = 0;
 
-  
   function getMousePosition(event) {
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
     return {
       x: (event.clientX - rect.left) * scaleX,
-      y: (event.clientY - rect.top) * scaleY
+      y: (event.clientY - rect.top) * scaleY,
     };
   }
 
+  
+  function getTouchPosition(event) {
+    const touch = event.touches[0];
+    return getMousePosition(touch);
+  }
+
   function hideMenus() {
-    const menuBars = document.querySelectorAll('.js-options');
-    menuBars.forEach(menu => {
-      menu.style.opacity = '0';
-      menu.style.pointerEvents = 'none';
+    document.querySelectorAll(".js-options").forEach((menu) => {
+      menu.style.opacity = "0";
+      menu.style.pointerEvents = "none";
     });
   }
 
   function showMenus() {
-    const menuBars = document.querySelectorAll('.js-options');
-    menuBars.forEach(menu => {
-      menu.style.opacity = '1';
-      menu.style.pointerEvents = 'auto';
+    document.querySelectorAll(".js-options").forEach((menu) => {
+      menu.style.opacity = "1";
+      menu.style.pointerEvents = "auto";
     });
   }
 
   function handleMouseDown(event) {
-    
+    event.preventDefault();
     hideMenus();
     isDrawing = true;
-    const { x, y } = getMousePosition(event);
-    startX = x;
-    startY = y;
 
-    // Set line style before starting path
-    ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = lineWidth || 5;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
+    const pos = event.type === "touchstart" ? getTouchPosition(event) : getMousePosition(event);
 
-    // Start new path
+    // Set eraser mode
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.lineWidth = lineWidth;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
     ctx.beginPath();
-    ctx.moveTo(startX, startY);
+    ctx.moveTo(pos.x, pos.y);
   }
 
   function handleMouseMove(event) {
+    event.preventDefault();
     if (!isDrawing) return;
-  
-    const { x, y } = getMousePosition(event);
-  
-    ctx.lineTo(x, y);
+
+    const pos = event.type === "touchstart" ? getTouchPosition(event) : getMousePosition(event);
+
+    ctx.lineTo(pos.x, pos.y);
     ctx.stroke();
-    
-    startX = x;
-    startY = y;
   }
 
   function handleMouseUp() {
     if (!isDrawing) return;
-    
-    showMenus();
+
     isDrawing = false;
     ctx.closePath();
+    // Reset composite operation back to default
+    ctx.globalCompositeOperation = 'source-over';
 
-    // Save current state to temp canvas
-    tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
-    tempCtx.drawImage(canvas, 0, 0);
     saveCanvasState();
     canvasStorage.save();
+    showMenus();
   }
 
   function handleMouseLeave() {
-    if (!isDrawing) return;
-    
-    showMenus();
-    isDrawing = false;
-    ctx.closePath();
-
-    // Save current state to temp canvas
-    tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
-    tempCtx.drawImage(canvas, 0, 0);
-    
+    if (isDrawing) {
+      handleMouseUp();
+    }
   }
 
-  // Set up the eraser tool with all its handlers
-  toolState.setCurrentTool('eraser', {
+  canvas.addEventListener('mousedown', handleMouseDown);
+  canvas.addEventListener('mousemove', handleMouseMove);
+  canvas.addEventListener('mouseup', handleMouseUp);
+  canvas.addEventListener('mouseleave', handleMouseLeave);
+
+
+  canvas.addEventListener('touchstart', handleMouseDown);
+  canvas.addEventListener('touchmove', handleMouseMove);
+  canvas.addEventListener('touchend', handleMouseUp);
+
+
+  return{
     mousedown: handleMouseDown,
     mousemove: handleMouseMove,
     mouseup: handleMouseUp,
-    mouseleave: handleMouseLeave
-  });
+    mouseleave: handleMouseLeave,
+  };
 }
 
-export function eraserClick(){
-  document.querySelector(".js-eraser").addEventListener('click', () => {
-    let html = "";
-    html = `<div>
-              <input type="range" min="0" max="100" value="50" class="slider" id="mySlider">
-              
-          </div>`;
-    document.querySelector(".tool-frame-2").innerHTML = html;
+export function eraserClick() {
+  document.querySelector(".js-eraser").addEventListener("click", () => {
+    document.querySelector(".tool-frame-2").innerHTML = `
+      <div>
+        <input type="range" min="1" max="100" value="${lineWidth}" class="slider" id="mySlider">
+      </div>`;
 
-
-    document.getElementById("mySlider").addEventListener('input',(event) => {
-      lineWidth =  event.target.value;
+    document.getElementById("mySlider").addEventListener("input", (event) => {
+      lineWidth = event.target.value;
     });
   });
-  
 }

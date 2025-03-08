@@ -13,10 +13,12 @@ export function rightArrowDraw(){
 
   let isDrawing = false;
   let startX = 0, startY = 0;
-  let width =0, height = 0;
+  let width = 0, height = 0;
 
   colorSelector();
   strokeSelector();
+
+
 
   function DrawRightArrow(x,y,height,width){
     // Draw the arrow line
@@ -47,37 +49,49 @@ export function rightArrowDraw(){
     };
   }
 
+  function getTouchPosition(event) {
+    const touch = event.touches[0];
+    return getMousePosition(touch);
+  }
+
   function handleMouseDown(event){
+    event.preventDefault();
     isDrawing = true;
-    const {x,y} = getMousePosition(event);
-    startX = x;
-    startY = y;
+    const pos = event.type === "touchstart" ? getTouchPosition(event) : getMousePosition(event);
+    startX = pos.x;
+    startY = pos.y;
     tempCtx.clearRect(0,0,tempCanvas.width,tempCanvas.height);
     tempCtx.drawImage(canvas,0,0);
   }
 
   function handleMouseMove(event){
+    event.preventDefault();
     if(!isDrawing) return;
-    const {x,y} = getMousePosition(event);
+    const pos = event.type === "touchstart" ? getTouchPosition(event) : getMousePosition(event);
     ctx.clearRect(0,0,canvas.width, canvas.height);
     ctx.drawImage(tempCanvas,0,0);
-    width = x - startX;
-    height = y - startY;
-    DrawRightArrow(x, y, height, width);
+    width = pos.x - startX;
+    height = pos.y - startY;
+    DrawRightArrow(pos.x, pos.y, height, width);
   }
 
   function handleMouseUp(event){
+    event.preventDefault();
     if(!isDrawing) return;
     isDrawing = false;
-    const {x,y} = getMousePosition(event);
-    width = x - startX;
-    height = y - startY;
-    DrawRightArrow(x,y,height,width,ctx)
+    const pos = event.type === "touchstart" ? getTouchPosition(event) : getMousePosition(event);
+    width = pos.x - startX;
+    height = pos.y - startY;
+    DrawRightArrow(pos.x,pos.y,height,width,ctx);
   }
 
   function handleMouseLeave(event){
     isDrawing = false;
   }
+
+  canvas.addEventListener('touchstart', handleMouseDown);
+  canvas.addEventListener('touchmove', handleMouseMove);
+  canvas.addEventListener('touchend', handleMouseUp);
 
   canvas.addEventListener('mousedown', handleMouseDown);
   canvas.addEventListener('mousemove', handleMouseMove);
@@ -91,3 +105,13 @@ export function rightArrowDraw(){
     mouseleave: handleMouseLeave
   };
 } 
+
+export function rightArrowClick() {
+  document.querySelector(".js-rightArrow").addEventListener('click', () => {
+    let html = "";
+    html = `<div>
+              <input type="range" min="0" max="100" value="50" class="slider" id="mySlider">
+          </div>`;
+    document.querySelector(".tool-frame-2").innerHTML = html;
+  });
+}

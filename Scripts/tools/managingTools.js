@@ -16,11 +16,12 @@ export const toolState = {
 
     // If switching away from shapes, remove the current shape
     if (this.currentTool === 'shape' && tool !== 'shape') {
-      clearCurrentShape(); // Ensure shape is cleared before switching tools
+      clearCurrentShape();
     }
 
-    // Update tool state
+    // Update tool state and cursor
     this.currentTool = tool;
+    this.updateCursor(tool);
 
     // If handlers are provided, set them up
     if (handlers) {
@@ -77,6 +78,28 @@ export const toolState = {
     const toolButton = document.querySelector(`.js-${tool}`);
     if (toolButton) {
       toolButton.classList.add('active');
+    }
+  },
+
+  updateCursor(tool) {
+    switch (tool) {
+      case 'freeHand':
+        document.body.style.cursor = 'crosshair';
+        break;
+      case 'eraser':
+        document.body.style.cursor = 'url("Icons/Tools/eraser.png") 8 8, auto';
+        break;
+      case 'paint':
+        document.body.style.cursor = 'url("Icons/Tools/bucket.png") 8 8, auto';
+        break;
+      case 'text':
+        document.body.style.cursor = 'text';
+        break;
+      case 'shape':
+        document.body.style.cursor = 'crosshair';
+        break;
+      default:
+        document.body.style.cursor = 'default';
     }
   }
 };

@@ -18,15 +18,19 @@ let stroke = 2;
 // Remove the current shape
 function removeCurrentShape() {
   if (currentShape) {
+    console.log(`Removing shape: ${currentShapeName}`);
+
     const canvas = document.getElementById("canvas-board");
     canvas.removeEventListener('mousedown', currentShape.mousedown);
     canvas.removeEventListener('mousemove', currentShape.mousemove);
     canvas.removeEventListener('mouseup', currentShape.mouseup);
     canvas.removeEventListener('mouseleave', currentShape.mouseleave);
+
     currentShape = null;
     currentShapeName = null;
   }
 }
+
 
 function removeActiveClass() {
   document.querySelectorAll('.js-shape-selector, .use-tool').forEach(button => {
