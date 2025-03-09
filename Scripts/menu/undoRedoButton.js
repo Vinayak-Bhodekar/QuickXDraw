@@ -9,13 +9,13 @@ export let redoStack = JSON.parse(localStorage.getItem("redostack")) || [];
 export function saveCanvasState() {
     const state = canvas.toDataURL();
     undoStack.push(state);
-    redoStack = []; // ✅ Clear redo stack when new action is performed
+    redoStack = []; 
 
     localStorage.setItem("undostack", JSON.stringify(undoStack));
     localStorage.setItem("redostack", JSON.stringify(redoStack));
 }
 
-// Function to undo the last action
+
 export function undo() {
     if (undoStack.length > 1) {
         redoStack.push(undoStack.pop());
@@ -23,7 +23,7 @@ export function undo() {
     }
 }
 
-// Function to redo the last undone action
+
 export function redo() {
     if (redoStack.length > 0) {
         const nextState = redoStack.pop();
@@ -32,7 +32,7 @@ export function redo() {
     }
 }
 
-// Function to restore canvas state from a saved image
+
 function restoreCanvas(state) {
     const ctx = canvas.getContext("2d");
     const img = new Image();

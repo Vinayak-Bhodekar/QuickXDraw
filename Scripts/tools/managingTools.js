@@ -11,19 +11,19 @@ export const toolState = {
     const canvas = document.getElementById("canvas-board");
     if (!canvas) return;
 
-    // Remove all existing event listeners
+    
     this.removeCurrentListeners(canvas);
 
-    // If switching away from shapes, remove the current shape
+    
     if (this.currentTool === 'shape' && tool !== 'shape') {
       clearCurrentShape();
     }
 
-    // Update tool state and cursor
+    
     this.currentTool = tool;
     this.updateCursor(tool);
 
-    // If handlers are provided, set them up
+    
     if (handlers) {
       if (typeof handlers === 'function') {
         this.currentHandler = handlers;
